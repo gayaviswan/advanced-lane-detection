@@ -11,19 +11,6 @@ The goals / steps of this project are the following:
 * Warp the detected lane boundaries back onto the original image.
 * Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.
 
-[//]: # (Image References)
-
-![undistort_output.png]: (./examples/undistort_output.png "Undistorted")
-[image2]: ./test_images/test1.jpg "Road Transformed"
-[image3]: ./examples/binary_combo_example.jpg "Binary Example"
-[image4]: ./examples/warped_straight_lines.jpg "Warp Example"
-[image5]: ./examples/color_fit_lines.jpg "Fit Visual"
-[image6]: ./examples/example_output.jpg "Output"
-[video1]: ./project_video.mp4 "Video"
-
-## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
-
-
 ### Writeup / README
 
 #### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
@@ -40,20 +27,20 @@ I start by preparing "object points", which will be the (x, y, z) coordinates of
 
 I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
 
-![Undistorted Chess Image][./output_images/calibrate_chess.jpg]
+![Undistorted Chess Image](./output_images/calibrate_chess.jpg)
 
 ### Pipeline (single images)
 
 #### 1. Provide an example of a distortion-corrected image.
 
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
-![Undistored Road Image][./output_images/undistort_road.jpg]
+![Undistored Road Image](./output_images/undistort_road.jpg)
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
 I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines #8 through #109 in threshold.py).  Here's an example of my output for this step.  
 
-![Color Threshold][./otput_images/threshold.jpg]
+![Color Threshold](./output_images/threshold.jpg)
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
@@ -83,23 +70,23 @@ This resulted in the following source and destination points:
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
-![Unwarp][./output_images/warped.jpg]
+![Unwarp](./output_images/warped.jpg)
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-I detected lane line using sliding window in lanedetect.py
+I detected lane line using sliding window in lanedetect.py. I initially do the sliding window search to identify lane lines. But once found, i start searching for lanes in the windows close to the old identified window.  
 
-![Plot Line][./output_images/plot_line.jpg]
+![Plot Line](./output_images/plot_line.jpg)
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines #178 through #204 in the function measure_curvature_real in my code in `linedetect.py` 
+I did this in lines #178 through #204 in the function measure_curvature_real in my code in `linedetect.py`. I had to convert the pixel space to real space.I used the ploynomial fits data to calculate the curvature. 
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
 I implemented this step in lines #43 through #66 in my code in `transform.py` in the function `inverse_warp()`.  Here is an example of my result on a test image:
 
-![Inverse Warp][./output_image/inverser_warp.jpg]
+![Inverse Warp](./output_image/inverser_warp.jpg)
 
 ---
 
@@ -110,10 +97,11 @@ I implemented this step in lines #43 through #66 in my code in `transform.py` in
 Here's a [link to my video result](./output_images/project_video.mp4)
 
 Here's a [link to challenge video result](./output_images/challenge_video.mp4)
+
 ---
 
 ### Discussion
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+Need further tuning for threshold values to handle deep curves and shadows as shown in challenge_video.mp4. Need more sanity checks to handle invalid cases. Error handling need to improved to handle tough road conditions. 
