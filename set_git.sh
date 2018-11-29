@@ -20,6 +20,7 @@ echo setting up git
 git config --global user.name $userVar
 git config --global user.email $emailVar
 git remote set-url origin $upstreamVar
+git config --global core.editor "vim"
 echo
 
 echo Please verify remote:
