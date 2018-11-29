@@ -13,7 +13,7 @@ The goals / steps of this project are the following:
 
 ### Writeup / README
 
-#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
+#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  
 
 You're reading it!
 
@@ -31,8 +31,11 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 
 ### Pipeline (single images)
 
+All constants that are used is stored in the file globalvars.py. The main thread that orchestrates is in the file process_image.py.  The function process_image at line #43 to #116 processes each frame of the video and uses the other pipeline to convert the frame with lane lines marked along with displaying the radius of curvature and center offset.
+
 #### 1. Provide an example of a distortion-corrected image.
 
+Distortion correction caliculated via camera calibration is applied to each image in the frame.
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
 ![Undistored Road Image](./output_images/undistort_road.jpg)
 
@@ -44,7 +47,7 @@ I used a combination of color and gradient thresholds to generate a binary image
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `unwarp()`, which appears in lines 1 through 8 in the file `transform.py`.  The `unwarp()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
+We want to transform the image to a bird's eye view to make it easier to identify lane lines. This is achieved using perspective transform. The code for my perspective transform includes a function called `unwarp()`, which appears in lines 1 through 8 in the file `transform.py`.  The `unwarp()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
 
 
 src = np.float32(
@@ -74,19 +77,19 @@ I verified that my perspective transform was working as expected by drawing the 
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-I detected lane line using sliding window in lanedetect.py. I initially do the sliding window search to identify lane lines. But once found, i start searching for lanes in the windows close to the old identified window.  
+Lane line pixesls are identified in perspective transfored image in thsi step. We fit a 2nd order polynomial to fit the lane line in this step. I detected lane line using sliding window in lanedetect.py. I initially do the sliding window search to identify lane lines. But once found, i start searching for lanes in the windows close to the old identified window.  
 
 ![Plot Line](./output_images/plot_line.jpg)
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines #178 through #204 in the function measure_curvature_real in my code in `linedetect.py`. I had to convert the pixel space to real space.I used the ploynomial fits data to calculate the curvature. 
+I did this in lines #178 through #204 in the function measure_curvature_real in my code in `linedetect.py`. I had to convert the pixel space to real space. I used the ploynomial fits data to calculate the curvature. Position of the vehicle with respect to center is implemented in #201 to #212 the function offset_center in linedetect.py
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
 I implemented this step in lines #43 through #66 in my code in `transform.py` in the function `inverse_warp()`.  Here is an example of my result on a test image:
 
-![Inverse Warp](./output_image/inverser_warp.jpg)
+![Inverse Warp](./output_images/inverse_warp.jpg)
 
 ---
 
